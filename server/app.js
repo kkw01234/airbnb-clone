@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 const models = require('./models/index');
 models.sequelize.sync().then(()=>{
-  console.log("DB");
+  console.log("DB Start");
 }).catch(err=>{
   console.error(err);
 });

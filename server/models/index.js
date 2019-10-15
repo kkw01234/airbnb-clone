@@ -34,7 +34,10 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.user = require('./user')(sequelize,Sequelize);
-db.accommodation = require('./accommodation')(sequelize,Sequelize);
-db.option = require('./option')(sequelize,Sequelize);
+db.user.hasMany(db.accommodation,{foreignKey : 'host_id',sourceKey :'user_id'});
+db.accommodation.hasOne(db.option, {foreignKey : 'accommodation_id', sourceKey : 'id'});
+db.user.hasMany(db.reservation,{foreignKey:'user_id',sourceKey:'user_id'});
+db.accommodation.hasMany(db.reservation,{foreignKey:'accomdation_id',sourceKey : "id"});
+
+
 module.exports = db;
