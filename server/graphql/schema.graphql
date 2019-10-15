@@ -1,0 +1,12 @@
+type user {
+    id:ID!
+    user_id: String
+    username: String
+    email: String,
+    password: String,
+    super_host: Boolean,
+}
+
+type Query{
+    users: [user],
+}
