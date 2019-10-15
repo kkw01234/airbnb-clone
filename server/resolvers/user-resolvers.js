@@ -5,6 +5,12 @@
         const users = await models.user.findAll();
         return users;
       },
+      getUser: async (root, {user_id},context,info)=>{
+        const user = await models.user.findOne({
+          where: {user_id : user_id}
+        });
+        return users;
+      },
     }
   };
 

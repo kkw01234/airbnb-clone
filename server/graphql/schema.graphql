@@ -8,5 +8,6 @@ type user {
 }
 
 type Query{
+    user: user,
     users: [user],
 }
