@@ -18,6 +18,19 @@
         return user;
       }
     },
+    Mutation:{
+      createUser: async (root,{user_id,username,email,password,super_host},context,info)=>{
+        const user = await models.user.create({
+          user_id,username,email,password,super_host,createdAt : new Date(),updatedAt:new Date()
+        });
+        return user;
+      },
+      deleteUser: async (root,{user_id},context,info)=>{
+        const user = await models.user.destroy({
+          where:{user_id}
+        });
+        return user;
+      }
     }
   };
 

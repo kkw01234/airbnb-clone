@@ -7,6 +7,11 @@ type user {
     super_host: Boolean,
 }
 
+type Mutation{
+    createUser(user_id: String, username: String, email: String, password: String,super_host:Boolean) : user
+    deleteUser(user_id: String) : user
+}
+
 type Query{
     user: user,
     users: [user],
