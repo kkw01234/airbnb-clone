@@ -10,4 +10,5 @@ type user {
 type Query{
     user: user,
     users: [user],
+    checkUserIdAndPassword(user_id: String!,password: String!): user
 }

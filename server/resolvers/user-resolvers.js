@@ -11,6 +11,13 @@
         });
         return users;
       },
+      checkUserIdAndPassword: async(root,{user_id,password},context,info)=>{
+        const user = await models.user.findOne({
+          where:{user_id,password}
+        });
+        return user;
+      }
+    },
     }
   };
 
