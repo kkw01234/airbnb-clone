@@ -1,0 +1,24 @@
+type accommodation{
+    id: ID!
+    name: String
+    address: String
+    image: String
+    content: String
+    price: Int
+    rating: Int
+    host_id: String
+    whole_house: Boolean
+    private_room: Boolean
+    hotel_room: Boolean
+    multi_person_room: Boolean
+    room_count: Boolean
+    bed_count: Boolean
+    bathroom_count: Boolean
+    min_person: Int
+    max_person: Int
+}
+type Query{
+    accommodations: [accommodation],
+    accommodation(id: Int): accommodation
+
+}

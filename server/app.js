@@ -12,6 +12,7 @@ const models = require('./models/index');
 // graphql
 const {GraphQLServer} = require('graphql-yoga');
 const resolvers = require('./resolvers/user-resolvers');
+const {fileLoader,mergeResolvers,mergeTypes} =require('merge-graphql-schemas');
 
 models.sequelize.sync().then(()=>{
   console.log("DB Start");
@@ -35,9 +36,14 @@ models.sequelize.sync().then(()=>{
 const context = req =>{
   req : req.request
 }
+const typeArray = fileLoader(path.join(__dirname,"graphql/*.graphql"));
+const resolverArray = fileLoader(path.join(__dirname,"resolvers/*.js"));
+
+console.log(typeArray);
+
 const server = new GraphQLServer({
-  typeDefs : 'graphql/schema.graphql',
-  resolvers,
+  typeDefs : mergeTypes(typeArray),
+  resolvers : mergeResolvers(resolverArray),
   context
 });
 passportConfig();

@@ -11,6 +11,7 @@ const resolvers = {
     getUser: async (root, { user_id }, context, info) => {
       const user = await models.user.findOne({
         where: { user_id: user_id }
+        
       });
       return users;
     },
@@ -23,7 +24,7 @@ const resolvers = {
       
       const user = await models.user.findOne({
         where: { user_id, password }
-      });
+      });ㅇ
       const token = jwt.sign(user.dataValues,process.env.APP_SECRET,{
         expiresIn : 1000 * 60 * 30,
         
