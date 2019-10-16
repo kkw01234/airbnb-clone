@@ -18,10 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       type : DataTypes.STRING,
       allowNull : false
     },
-    create_time: {
-      type : DataTypes.DATE,
-      allowNull : false
-    },
     super_host: {
       type : DataTypes.BOOLEAN,
       allowNull : false

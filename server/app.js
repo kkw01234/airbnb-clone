@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const passport =require('passport');
+const passportConfig = require('./passport/passport');
+
 const controller = require('./controller/controller');
 const models = require('./models/index');
 // graphql
@@ -17,16 +20,16 @@ models.sequelize.sync().then(()=>{
 });
 
 
-var app = express();
+// var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, '../client/views'));
-app.set('view engine', 'pug');
+// app.set('views', path.join(__dirname, '../client/views'));
+// app.set('view engine', 'pug');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(logger('dev'));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+// app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, '../client/public')));
 
 const context = req =>{
@@ -36,8 +39,16 @@ const server = new GraphQLServer({
   typeDefs : 'graphql/schema.graphql',
   resolvers,
   context
-})
-
+});
+passportConfig();
+server.express.use(passport.initialize());
+server.express.use(function(req,res,next){
+  passport.authenticate('jwt',{session:false},(err,user,infor)=>{
+    if(user) req.user = user;
+    next();
+  })(req,res,next);
+ 
+});
 const options = {
   port : 3333,
   endpoint : '/api',
@@ -48,12 +59,8 @@ const options = {
   }
 }
 
-
-
-
-
 server.start(options,()=>console.log("Graphql Server start"));
-app.use('/', controller);
+// app.use('/', controller);
 
 
 // // catch 404 and forward to error handler
@@ -72,4 +79,4 @@ app.use('/', controller);
 //   res.render('error');
 // });
 
-module.exports = app;
+// module.exports = app;

@@ -15,5 +15,10 @@ type Mutation{
 type Query{
     user: user,
     users: [user],
-    checkUserIdAndPassword(user_id: String!,password: String!): user
+    getUser(user_id: String) : user
+    checkUserIdAndPassword(user_id: String!,password: String!): token
+}
+
+type token{
+    token: String
 }

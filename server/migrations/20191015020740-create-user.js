@@ -22,9 +22,6 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      create_time: {
-        type: Sequelize.DATE
-      },
       super_host: {
         type: Sequelize.BOOLEAN
       },
