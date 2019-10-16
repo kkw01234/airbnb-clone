@@ -20,5 +20,5 @@ type accommodation{
 type Query{
     accommodations: [accommodation],
     accommodation(id: Int): accommodation
-
+    findAccForNumberOfPerson(count: Int): [accommodation]
 }
