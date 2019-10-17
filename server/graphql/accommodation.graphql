@@ -1,4 +1,5 @@
 scalar Date
+
 type accommodation{
     id: ID!
     name: String
@@ -12,14 +13,32 @@ type accommodation{
     private_room: Boolean
     hotel_room: Boolean
     multi_person_room: Boolean
-    room_count: Boolean
-    bed_count: Boolean
-    bathroom_count: Boolean
+    room_count: Int
+    bed_count: Int
+    bathroom_count: Int
     min_person: Int
     max_person: Int
+    reservation: [reservation]
 }
+type reservation{
+    id: ID!
+    start_date: Date
+    end_date: Date
+    person_count: Int
+    user_id: String
+    accommodation_id: Int
+}
+
+
 type Query{
     accommodations: [accommodation]
     accommodation(id: Int): accommodation
     findAccForNumberOfPerson(count: Int): [accommodation]
+    findAccForPrice(min_price:Int,max_price:Int):[accommodation]
+    findAccFilter(check_in:Date,check_out:Date,person:Int,whole_house:Boolean,private_room:Boolean,
+                    hotel_room:Boolean,multi_person_room:Boolean,room_count:Int,bed_count:Int,bathroom_count:Int
+                    ,min_person:Int,max_person:Int): [accommodation]
 }
+# type Mutation{
+#   createReservation(user_id:String, accommodation_id:Int,check_in:Date,check_out:Date,person_count:Int)
+# }

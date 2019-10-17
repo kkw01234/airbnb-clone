@@ -24,7 +24,7 @@ const resolvers = {
       
       const user = await models.user.findOne({
         where: { user_id, password }
-      });ㅇ
+      });
       const token = jwt.sign(user.dataValues,process.env.APP_SECRET,{
         expiresIn : 1000 * 60 * 30,
         
