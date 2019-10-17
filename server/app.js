@@ -33,9 +33,9 @@ models.sequelize.sync().then(()=>{
 // app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, '../client/public')));
 
-const context = req =>{
-  req : req.request
-}
+const context = req =>({
+  ...req
+});
 const typeArray = fileLoader(path.join(__dirname,"graphql/*.graphql"));
 const resolverArray = fileLoader(path.join(__dirname,"resolvers/*.js"));
 

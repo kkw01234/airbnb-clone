@@ -146,7 +146,7 @@ const resolvers = {
       info
     ) => {
       // const user_id = context.user.user_id || "";
-      const user_id = "1234";
+      const user_id = context.request.user.user_id;
       const reservation = await models.reservation.create({
         accommodation_id,
         start_date,
@@ -164,8 +164,7 @@ const resolvers = {
       context,
       info
     ) => {
-      const user_id = "1234";
-      // const user_id = req.user.user_id;
+      const user_id = context.request.user.user_id;
       const destroyReservation = await models.reservation.destroy({
         where: {
           id,
