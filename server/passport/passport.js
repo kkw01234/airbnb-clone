@@ -13,11 +13,15 @@ module.exports = ()=>{
         jwtFromRequest : ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey : "test"
     },async (jwt_payload, done)=>{
+        console.log("sss",jwt_payload);
         const user = await models.user.findOne({
             where : 
                 {user_id : jwt_payload.user_id}
             });
-        if(user) return done(null,user);
+        if(user) return done(null,{
+            user_id : user.user_id,
+            username : user.username
+        });
         else return done(null,false);
         }
     )

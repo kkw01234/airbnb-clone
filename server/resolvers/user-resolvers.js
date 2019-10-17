@@ -27,7 +27,6 @@ const resolvers = {
       });
       const token = jwt.sign(user.dataValues,process.env.APP_SECRET,{
         expiresIn : 1000 * 60 * 30,
-        
       });
 
       console.log(token);

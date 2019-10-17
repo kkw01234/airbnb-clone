@@ -51,7 +51,9 @@ const resolvers = {
         multi_person_room = false,
         room_count,
         bed_count,
-        bathroom_count
+        bathroom_count,
+        low_price = 0,
+        high_price = Number.MAX_SAFE_INTEGER
       },
       context,
       info
@@ -84,7 +86,13 @@ const resolvers = {
       if (room_count) where.room_count = room_count;
       if (bed_count) where.bed_count = bed_count;
       if (bathroom_count) where.bathroom_count = bathroom_count;
+      where.price = {
+        [Op.gte] : low_price,
+        [Op.gte] : high_price
+      }
 
+     
+      console.log(where);
       const accs = await models.accommodation.findAll({
         where,
         include: [

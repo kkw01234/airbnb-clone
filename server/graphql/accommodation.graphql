@@ -46,7 +46,9 @@ type Query {
     bed_count: Int
     bathroom_count: Int
     min_person: Int
-    max_person: Int
+    max_person: Int,
+    low_price: Int,
+    high_price: Int
   ): [accommodation]
 }
 type result{
