@@ -11,7 +11,7 @@ module.exports = ()=>{
     });
     passport.use(new JwtStrategy({
         jwtFromRequest : ExtractJwt.fromAuthHeaderAsBearerToken(),
-        secretOrKey : "test"
+        secretOrKey : process.env.APP_SECRET
     },async (jwt_payload, done)=>{
         console.log("sss",jwt_payload);
         const user = await models.user.findOne({
