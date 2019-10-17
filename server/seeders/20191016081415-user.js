@@ -1,11 +1,13 @@
 "use strict";
 const csv = require("csv-parser");
 const fs = require("fs");
+const stripBom = require('strip-bom-stream');
 const results = [];
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const result = await new Promise((res, rej) => {
       fs.createReadStream("data/user.csv")
+        .pipe(stripBom())
         .pipe(csv())
         .on("data", data => {
           data.createdAt = new Date();
@@ -17,7 +19,7 @@ module.exports = {
         });
         
     });
-
+    console.log(results);
     return queryInterface.bulkInsert("users", results);
 
   },
