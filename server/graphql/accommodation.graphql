@@ -1,3 +1,4 @@
+scalar Date
 type accommodation{
     id: ID!
     name: String
@@ -18,7 +19,7 @@ type accommodation{
     max_person: Int
 }
 type Query{
-    accommodations: [accommodation],
+    accommodations: [accommodation]
     accommodation(id: Int): accommodation
     findAccForNumberOfPerson(count: Int): [accommodation]
 }

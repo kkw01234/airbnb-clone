@@ -1,6 +1,6 @@
 require("dotenv").config();
 const models = require("../models/index");
-const {Op} = require('sequelize');
+const { Op } = require("sequelize");
 // const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const resolvers = {
