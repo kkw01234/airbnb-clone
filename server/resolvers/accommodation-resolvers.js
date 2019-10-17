@@ -16,7 +16,7 @@ const resolvers = {
       return acc;
     },
     findAccForNumberOfPerson: async (root, { count }, context, info) => {
-        const accs = await models.accommodation.findAll({
+      const accs = await models.accommodation.findAll({
         where: {
           min_person: {
             [Op.lte]: count
@@ -34,8 +34,8 @@ const resolvers = {
           price: {
             [Op.gte]: min_price,
             [Op.lte]: max_price
-    }
-  }
+          }
+        }
       });
       return accs;
     },
@@ -130,6 +130,46 @@ const resolvers = {
       return accs;
     }
   },
+  Mutation: {
+    createReservation: async (
+      root,
+      { accommodation_id, start_date, end_date, person_count },
+      context,
+      info
+    ) => {
+      // const user_id = context.user.user_id || "";
+      const user_id = "1234";
+      const reservation = await models.reservation.create({
+        accommodation_id,
+        start_date,
+        end_date,
+        person_count,
+        user_id
+      });
+      console.log(reservation);
+      return reservation;
+    },
+
+    deleteReservation: async (
+      root,
+      { id, accommodation_id },
+      context,
+      info
+    ) => {
+      const user_id = "1234";
+      // const user_id = req.user.user_id;
+      const destroyReservation = await models.reservation.destroy({
+        where: {
+          id,
+          user_id,
+          accommodation_id
+        }
+      });
+      return {
+        result : true
+      };
+    }
+  }
 };
 
 module.exports = resolvers;
