@@ -66,12 +66,12 @@ const resolvers = {
         "$reservations.id$": null
       };
       if (person) {
-        (where.min_person = {
+        where.min_person = {
           [Op.lte]: person
-        }),
-          (where.max_person = {
-            [Op.gte]: person
-          });
+        };
+        where.max_person = {
+          [Op.gte]: person
+        };
       }
       if (whole_house) {
         where.whole_house = true;
@@ -87,11 +87,10 @@ const resolvers = {
       if (bed_count) where.bed_count = bed_count;
       if (bathroom_count) where.bathroom_count = bathroom_count;
       where.price = {
-        [Op.gte] : low_price,
-        [Op.gte] : high_price
-      }
+        [Op.gte]: low_price,
+        [Op.lte]: high_price
+      };
 
-     
       console.log(where);
       const accs = await models.accommodation.findAll({
         where,
@@ -173,7 +172,7 @@ const resolvers = {
         }
       });
       return {
-        result : true
+        result: true
       };
     }
   }

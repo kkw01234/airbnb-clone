@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Counter from "../../component/Counter/index";
 import { Button } from "./style";
 import Modal from "../../component/Modal/index";
@@ -33,7 +33,6 @@ export const peopleReducer = (state, action) => {
 };
 
 const filterHandler = async () => {
-  console.log(peopleCount);
   const query = `query{
         findAccFilter(person: ${peopleCount}){
             name,
@@ -50,7 +49,17 @@ const filterHandler = async () => {
   console.log(data);
 };
 
-const homes = () => {
+const homes = (props) => {
+//   const [modalWindow, setModalWindow] = useState({
+//     date: false,
+//     personCount: false,
+//     type: false,
+//     filter: false
+//   });
+//   const counterHandler = () => {
+//     // console.log("test");
+//     setModalWindow({ ...modalWindow, personCount: true });
+//   };
   return (
     <div>
       <div>
@@ -63,6 +72,7 @@ const homes = () => {
         <Button>숙소 유형</Button>
         <Button>필터 추가하기</Button>
       </div>
+      {/* {modalWindow.personCount && <p>으앙아아아ㅏㅇ</p>} */}
       <Modal
         content={
           <div>
