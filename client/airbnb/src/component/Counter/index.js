@@ -1,18 +1,19 @@
-import React, {useReducer} from 'react';
-import {Component} from './style';
-import {peopleReducer} from '../../views/homes'
+import React, {useReducer,useContext} from 'react';
+import {Component,Button} from './style';
+// import {countPeopleReducer} from '../../views/homes/reducer';
+import {CountPeopleContext} from '../../views/homes/index';
 const Counter = ({type,value})=>{
-    const [people, peopleDispatch] = useReducer(peopleReducer,value);
-    // peopleDispatch({upAndDown : "init"})
+    const {countPeople,countPeopleDispatch} = useContext(CountPeopleContext);
+    console.log(countPeople)
     return (
     <Component>
         <div>
-            {people.name}
+            {value.name}
         </div>
         <div>
-            <button onClick={()=>{peopleDispatch({upAndDown:"down",type})}}>-</button>
-            <span>{people.count}</span>
-            <button onClick={()=>{peopleDispatch({upAndDown:"up",type})}}>+</button>
+            <Button onClick={()=>{countPeopleDispatch({upAndDown:"down",type})}}>-</Button>
+            <span>{countPeople[type]}</span>
+            <Button onClick={()=>{countPeopleDispatch({upAndDown:"up",type})}}>+</Button>
         </div>
     </Component>
     );
