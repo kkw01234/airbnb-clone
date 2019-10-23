@@ -17,3 +17,7 @@ export const roomTypeReducer = (state, action) => {
   state[action.name] = !state[action.name];
   return {...state};
 };
+
+export const priceTypeReducer = (state, action) =>{
+    console.log(state, action);
+}

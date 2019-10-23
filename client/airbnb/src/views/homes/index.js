@@ -2,15 +2,16 @@ import React, { useState, createContext, useReducer } from "react";
 import Counter from "../../component/Counter/index";
 import { Button } from "./style";
 /* reducer */
-import { countPeopleReducer, roomTypeReducer } from "./reducer";
+import { countPeopleReducer, roomTypeReducer,priceTypeReducer } from "./reducer";
 import Modal from "../../component/Modal/index";
 import sendRequest from "../../utils/sendRequest";
 import AccommodationType from "../../component/AccommodationType";
+import Slide from "../../component/Slide";
 
 /* context API */
 export const CountPeopleContext = createContext();
 export const RoomTypeContext = createContext();
-
+export const priceContext=createContext();
 const adult = {
   name: "성인",
   comment: ""
@@ -80,7 +81,9 @@ const Homes = props => {
     hotel_room: false,
     multi_person_room: false
   });
+  const [] = useReducer(priceTypeReducer,{
 
+  })
   const [modalState, setModalState] = useState({
     date: false,
     personCount: false,
@@ -105,7 +108,7 @@ const Homes = props => {
         <Button onClick={counterHandler.bind(this, "personCount")}>인원</Button>
         <Button onClick={counterHandler.bind(this, "type")}>숙소 유형</Button>
         <Button onClick={counterHandler.bind(this, "filter")}>
-          필터 추가하기
+          필터 추가하기(가격)
         </Button>
       </div>
       {modalState.date && (
@@ -168,7 +171,7 @@ const Homes = props => {
         <Modal
           content={
             <div>
-              <p>filter</p>
+              <Slide></Slide>
             </div>
           }
         />

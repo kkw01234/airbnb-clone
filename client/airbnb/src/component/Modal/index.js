@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Container} from './style'
 
 const Modal = (props) =>{
+    // const [data, setData] = useState("data");
     return (
     <>
         <Container>
