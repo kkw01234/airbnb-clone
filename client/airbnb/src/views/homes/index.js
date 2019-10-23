@@ -7,6 +7,7 @@ import Modal from "../../component/Modal/index";
 import sendRequest from "../../utils/sendRequest";
 import AccommodationType from "../../component/AccommodationType";
 import Slide from "../../component/Slide";
+import { Calender } from "../../component/Calender";
 
 /* context API */
 export const CountPeopleContext = createContext();
@@ -115,7 +116,7 @@ const Homes = props => {
         <Modal
           content={
             <div>
-              <p>date</p>
+              <Calender></Calender>
             </div>
           }
         />
