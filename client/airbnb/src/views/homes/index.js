@@ -1,14 +1,15 @@
 import React, { useState, createContext, useReducer } from "react";
 import Counter from "../../component/Counter/index";
 import { Button } from "./style";
-import {countPeopleReducer } from "./reducer";
+/* reducer */
+import { countPeopleReducer, roomTypeReducer } from "./reducer";
 import Modal from "../../component/Modal/index";
 import sendRequest from "../../utils/sendRequest";
 import AccommodationType from "../../component/AccommodationType";
 
 /* context API */
 export const CountPeopleContext = createContext();
-/* reducer */
+export const RoomTypeContext = createContext();
 
 const adult = {
   name: "성인",
@@ -22,7 +23,6 @@ const baby = {
   name: "유아",
   comment: "2세 미만"
 };
-
 
 const type = {
   whole_house: {
@@ -74,6 +74,12 @@ const Homes = props => {
     child: 0,
     baby: 0
   });
+  const [roomType,roomTypeDispatch] = useReducer(roomTypeReducer, {
+    whole_house: false,
+    private_room: false,
+    hotel_room: false,
+    multi_person_room: false
+  });
 
   const [modalState, setModalState] = useState({
     date: false,
@@ -83,6 +89,9 @@ const Homes = props => {
   });
 
   const counterHandler = state => {
+    Object.keys(modalState).map((value)=>{
+      modalState[value] = false;
+    });
     modalState[state] = !modalState[state];
     setModalState({ ...modalState });
   };
@@ -109,7 +118,9 @@ const Homes = props => {
         />
       )}
       {modalState.personCount && (
-        <CountPeopleContext.Provider value={{countPeople,countPeopleDispatch}}>
+        <CountPeopleContext.Provider
+          value={{ countPeople, countPeopleDispatch }}
+        >
           <Modal
             content={
               <div>
@@ -128,24 +139,28 @@ const Homes = props => {
       {modalState.type && (
         <Modal
           content={
-            <>
+            <RoomTypeContext.Provider value={{roomType,roomTypeDispatch}}>
               <AccommodationType
+                value={"whole_house"}
                 title={type.whole_house.title}
                 content={type.whole_house.content}
               />
               <AccommodationType
+                value={"private_room"}
                 title={type.private_room.title}
                 content={type.private_room.content}
               />
               <AccommodationType
+                value={"hotel_room"}
                 title={type.hotel_room.title}
                 content={type.hotel_room.content}
               />
               <AccommodationType
+                value={"multi_person_room"}
                 title={type.multi_person_room.title}
                 content={type.multi_person_room.content}
               />
-            </>
+            </RoomTypeContext.Provider>
           }
         />
       )}
