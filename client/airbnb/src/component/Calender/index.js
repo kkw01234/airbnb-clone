@@ -16,9 +16,9 @@ export const Calender = (props) => {
       <DateWrap>
         <DayPickerRangeController
           startDate={date.startDate} // momentPropTypes.momentObj or null,
-          startDateId={date.startDate}
+          // startDateId={null}
           endDate={date.endDate} // momentPropTypes.momentObj or null,
-          endDateId={date.endDate}
+          // endDateId={null}
           onDatesChange={({ startDate, endDate }) => {
             // setStartDate(startDate);
             // setEndDate(endDate);

@@ -16,6 +16,7 @@ import Slide from "../../component/Slide";
 import { Calender } from "../../component/Calender";
 import moment from "moment";
 import { Accommodation } from "../../component/Accommodation/index";
+import { getDateString, getCountAllPeople } from "../../utils/utils";
 
 /* context API */
 export const CountPeopleContext = createContext();
@@ -63,9 +64,6 @@ const typeCheck = {
   hotel_room: false,
   multi_person_room: false
 };
-
-let isFetching =false;
-
 const Homes = props => {
   
   const [countPeople, countPeopleDispatch] = useReducer(countPeopleReducer, {
@@ -79,10 +77,10 @@ const Homes = props => {
     hotel_room: false,
     multi_person_room: false
   });
-  const [price,priceDispatch] = useReducer(PriceReducer, [0,1000000]);
+  const [price,priceDispatch] = useReducer(PriceReducer, [0,500000]);
   const [date, dateDispatch] = useReducer(DateReducer, {
-    startDate: moment(),
-    endDate: moment()
+    startDate: undefined,
+    endDate: undefined
   });
   const [modalState, modalStateDispatch] = useReducer(ModalReducer, {
     date: false,
@@ -92,15 +90,11 @@ const Homes = props => {
   });
 
   const filterHandler = async () => {
-    const count = Object.keys(countPeople).reduce((prev, curr) => {
-      prev += countPeople[curr];
-      return prev;
-    }, 0);
-    console.log(price);
+    const count = getCountAllPeople(countPeople);
     const query = `query{
           findAccFilter(
-            check_in: "${date.startDate._d}",
-            check_out: "${date.endDate._d}", 
+            check_in: "${date.startDate ? date.startDate._d: moment()._d }",
+            check_out: "${date.endDate ?  date.endDate._d : moment()._d}", 
             person: ${count},
             whole_house : ${roomType.whole_house},
             private_room : ${roomType.private_room},
@@ -150,13 +144,28 @@ const Homes = props => {
       {/* {getAccommodation()} */}
       <ModalContext.Provider value={{ modalState, modalStateDispatch }}>
         <div>
-          <Button onClick={counterHandler.bind(this, "date")}>날짜</Button>
+          <Button onClick={counterHandler.bind(this, "date")}>{(date.startDate && date.endDate) ? getDateString(new Date(date.startDate._d)) +" ~ "+getDateString(new Date(date.endDate._d)) : "날짜"}</Button>
           <Button onClick={counterHandler.bind(this, "personCount")}>
-            인원
+            {(()=>{
+              const count = getCountAllPeople(countPeople) 
+              return count ? "게스트 " + count+ "명" : "인원" ;
+            })()
+            }
           </Button>
-          <Button onClick={counterHandler.bind(this, "type")}>숙소 유형</Button>
+          <Button onClick={counterHandler.bind(this, "type")}>
+            { (()=>{
+                let string = "";
+                string +=roomType.whole_house ? type.whole_house.title+"," : ""
+                string +=roomType.private_room ? type.private_room.title +"," : ""
+                string +=roomType.hotel_room ? type.hotel_room.title +"," : ""
+                string +=roomType.multi_person_room ? type.multi_person_room.title +"," : ""
+                if(string === "") return "숙소 유형";
+                else return string;
+            })()
+             }
+          </Button>
           <Button onClick={counterHandler.bind(this, "price")}>
-            필터 추가하기(가격)
+            {"필터 추가하기(가격)"}
           </Button>
         </div>
 
@@ -291,7 +300,6 @@ const Homes = props => {
                     </Button>
                   </ButtonContainer>
               </PriceContext.Provider>
-              
             }
           />
         )}

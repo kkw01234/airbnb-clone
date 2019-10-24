@@ -122,7 +122,7 @@ export default function CustomizedSlider() {
       <AirbnbSlider
         ThumbComponent={AirbnbThumbComponent}
         onChange={handleChange}
-        max={1000000}
+        max={500000}
         getAriaLabel={index =>
           index === 0 ? "Minimum price" : "Maximum price"
         }
