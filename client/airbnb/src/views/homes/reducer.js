@@ -18,8 +18,9 @@ export const roomTypeReducer = (state, action) => {
   return {...state};
 };
 
-export const priceTypeReducer = (state, action) =>{
+export const PriceReducer = (state, action) =>{
     console.log(state, action);
+    return action.price;
 }
 
 export const ModalReducer = (state, action) =>{

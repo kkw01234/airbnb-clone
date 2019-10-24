@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
+import {PriceContext} from '../../views/homes/index';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -106,10 +108,11 @@ function AirbnbThumbComponent(props) {
 }
 
 export default function CustomizedSlider() {
-  const [value, setValue] = useState([0, 10000]);
+  const {price,priceDispatch} = useContext(PriceContext);
+  // const [value, setValue] = useState([0, 1000000]);
   const handleChange = (event, newValue)=>{
       console.log(newValue);
-      setValue(newValue);
+      priceDispatch({price:newValue});
   }
   const classes = useStyles();
 
@@ -119,10 +122,11 @@ export default function CustomizedSlider() {
       <AirbnbSlider
         ThumbComponent={AirbnbThumbComponent}
         onChange={handleChange}
+        max={1000000}
         getAriaLabel={index =>
           index === 0 ? "Minimum price" : "Maximum price"
         }
-        defaultValue={value}
+        defaultValue={price}
         valueLabelDisplay="on"
         getAriaValueText={valuetext}
       />

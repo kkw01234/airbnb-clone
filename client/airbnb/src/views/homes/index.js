@@ -5,9 +5,9 @@ import { Button, ButtonContainer } from "./style";
 import {
   countPeopleReducer,
   roomTypeReducer,
-  priceTypeReducer,
   ModalReducer,
-  DateReducer
+  DateReducer,
+  PriceReducer
 } from "./reducer";
 import Modal from "../../component/Modal/index";
 import sendRequest from "../../utils/sendRequest";
@@ -20,7 +20,7 @@ import { Accommodation } from "../../component/Accommodation/index";
 /* context API */
 export const CountPeopleContext = createContext();
 export const RoomTypeContext = createContext();
-export const priceContext = createContext();
+export const PriceContext = createContext();
 export const ModalContext = createContext();
 export const DateContext = createContext();
 
@@ -79,7 +79,7 @@ const Homes = props => {
     hotel_room: false,
     multi_person_room: false
   });
-  const [] = useReducer(priceTypeReducer, {});
+  const [price,priceDispatch] = useReducer(PriceReducer, [0,1000000]);
   const [date, dateDispatch] = useReducer(DateReducer, {
     startDate: moment(),
     endDate: moment()
@@ -96,6 +96,7 @@ const Homes = props => {
       prev += countPeople[curr];
       return prev;
     }, 0);
+    console.log(price);
     const query = `query{
           findAccFilter(
             check_in: "${date.startDate._d}",
@@ -104,7 +105,9 @@ const Homes = props => {
             whole_house : ${roomType.whole_house},
             private_room : ${roomType.private_room},
             hotel_room : ${roomType.hotel_room},
-            multi_person_room : ${roomType.multi_person_room}){
+            multi_person_room : ${roomType.multi_person_room},
+            low_price : ${price[0]},
+            high_price : ${price[1]}){
               name,
               address,
               image,
@@ -121,6 +124,7 @@ const Homes = props => {
     // console.log(query);
     const data = await sendRequest(query);
     setAccommodations(data.findAccFilter);
+    
     // return data;
   };
   const [accommodations, setAccommodations] = useState([]);
@@ -164,20 +168,21 @@ const Homes = props => {
                   <Calender type={"date"}></Calender>
 
                   <ButtonContainer>
-                    <button
+                    <Button
                       onClick={() => {
-                        modalStateDispatch({ type: props.type });
+                        modalStateDispatch({ type: "date" });
                       }}
                     >
                       취소
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => {
-                        modalStateDispatch({ type: props.type });
+                        modalStateDispatch({ type: "date" });
+                        filterHandler();
                       }}
                     >
                       확인
-                    </button>
+                    </Button>
                   </ButtonContainer>
                 </div>
               }
@@ -194,9 +199,23 @@ const Homes = props => {
                   <Counter type={"adult"} value={adult} />
                   <Counter type={"child"} value={child} />
                   <Counter type={"baby"} value={baby} />
-                  <div>
-                    <Button onClick={filterHandler}>저장</Button>
-                  </div>
+                  <ButtonContainer>
+                    <Button
+                      onClick={() => {
+                        modalStateDispatch({ type: "personCount" });
+                      }}
+                    >
+                      취소
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        modalStateDispatch({ type: "personCount" });
+                        filterHandler();
+                      }}
+                    >
+                      확인
+                    </Button>
+                  </ButtonContainer>
                 </div>
               }
             />
@@ -227,22 +246,58 @@ const Homes = props => {
                   title={type.multi_person_room.title}
                   content={type.multi_person_room.content}
                 />
+                 <ButtonContainer>
+                    <Button
+                      onClick={() => {
+                        modalStateDispatch({ type: "type" });
+                      }}
+                    >
+                      취소
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        modalStateDispatch({ type: "type" });
+                        filterHandler();
+                      }}
+                    >
+                      확인
+                    </Button>
+                  </ButtonContainer>
               </RoomTypeContext.Provider>
+             
             }
           />
         )}
-        {modalState.filter && (
+        {modalState.price && (
           <Modal
             content={
-              <div>
+              <PriceContext.Provider value={{price,priceDispatch}}>
                 <Slide></Slide>
-              </div>
+                <ButtonContainer>
+                    <Button
+                      onClick={() => {
+                        modalStateDispatch({ type: "price" });
+                      }}
+                    >
+                      취소
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        modalStateDispatch({ type: "price" });
+                        filterHandler();
+                      }}
+                    >
+                      확인
+                    </Button>
+                  </ButtonContainer>
+              </PriceContext.Provider>
+              
             }
           />
         )}
       </ModalContext.Provider>
       <div>
-        {console.log(accommodations)}
+        <div>총 {accommodations.length}객실</div>
         {
           accommodations.length >=1  &&
           (
