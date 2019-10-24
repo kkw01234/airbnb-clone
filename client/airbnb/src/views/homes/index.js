@@ -1,18 +1,27 @@
 import React, { useState, createContext, useReducer } from "react";
 import Counter from "../../component/Counter/index";
-import { Button } from "./style";
+import { Button,ButtonContainer } from "./style";
 /* reducer */
-import { countPeopleReducer, roomTypeReducer,priceTypeReducer } from "./reducer";
+import {
+  countPeopleReducer,
+  roomTypeReducer,
+  priceTypeReducer,
+  ModalReducer,
+  DateReducer
+} from "./reducer";
 import Modal from "../../component/Modal/index";
 import sendRequest from "../../utils/sendRequest";
 import AccommodationType from "../../component/AccommodationType";
 import Slide from "../../component/Slide";
 import { Calender } from "../../component/Calender";
+import moment from "moment";
 
 /* context API */
 export const CountPeopleContext = createContext();
 export const RoomTypeContext = createContext();
-export const priceContext=createContext();
+export const priceContext = createContext();
+export const ModalContext = createContext();
+export const DateContext = createContext();
 const adult = {
   name: "성인",
   comment: ""
@@ -53,130 +62,143 @@ const typeCheck = {
   multi_person_room: false
 };
 
-const filterHandler = async () => {
-  const query = `query{
-        findAccFilter(person: ${"0"}){
-            name,
-            address,
-            image,
-            content,
-            price,
-            rating
-            host_id
-        }
-    }`;
-
-  const data = await sendRequest(query);
-  console.log(data);
-};
-
 const Homes = props => {
   const [countPeople, countPeopleDispatch] = useReducer(countPeopleReducer, {
     adult: 0,
     child: 0,
     baby: 0
   });
-  const [roomType,roomTypeDispatch] = useReducer(roomTypeReducer, {
+  const [roomType, roomTypeDispatch] = useReducer(roomTypeReducer, {
     whole_house: false,
     private_room: false,
     hotel_room: false,
     multi_person_room: false
   });
-  const [] = useReducer(priceTypeReducer,{
-
-  })
-  const [modalState, setModalState] = useState({
+  const [] = useReducer(priceTypeReducer, {});
+  const [date, dateDispatch] = useReducer(DateReducer, {
+    startDate: moment(),
+    endDate: moment()
+  });
+  const [modalState, modalStateDispatch] = useReducer(ModalReducer, {
     date: false,
     personCount: false,
     type: false,
-    filter: false
+    price: false
   });
 
   const counterHandler = state => {
-    Object.keys(modalState).map((value)=>{
-      modalState[value] = false;
-    });
-    modalState[state] = !modalState[state];
-    setModalState({ ...modalState });
+    modalStateDispatch({ type: state });
   };
+  const filterHandler = async () => {
+    const query = `query{
+          findAccFilter(
+            start_date: ${date.startDate},
+            end_date: ${date.endDate} 
+            person: ${countPeople}}){
+              name,
+              address,
+              image,
+              content,
+              price,
+              rating
+              host_id
+          }
+      }`;
+
+    const data = await sendRequest(query);
+    console.log(data);
+  };
+
   return (
     <div>
       <div>
         <div></div>
       </div>
-      <div>
-        <Button onClick={counterHandler.bind(this, "date")}>날짜</Button>
-        <Button onClick={counterHandler.bind(this, "personCount")}>인원</Button>
-        <Button onClick={counterHandler.bind(this, "type")}>숙소 유형</Button>
-        <Button onClick={counterHandler.bind(this, "filter")}>
-          필터 추가하기(가격)
-        </Button>
-      </div>
-      {modalState.date && (
-        <Modal
-          content={
-            <div>
-              <Calender></Calender>
-            </div>
-          }
-        />
-      )}
-      {modalState.personCount && (
-        <CountPeopleContext.Provider
-          value={{ countPeople, countPeopleDispatch }}
-        >
+      <ModalContext.Provider value={{ modalState, modalStateDispatch }}>
+        <div>
+          <Button onClick={counterHandler.bind(this, "date")}>날짜</Button>
+          <Button onClick={counterHandler.bind(this, "personCount")}>
+            인원
+          </Button>
+          <Button onClick={counterHandler.bind(this, "type")}>숙소 유형</Button>
+          <Button onClick={counterHandler.bind(this, "price")}>
+            필터 추가하기(가격)
+          </Button>
+        </div>
+
+        {modalState.date && (
+          <DateContext.Provider value={{ date, dateDispatch }}>
+            <Modal
+              content={
+                <div>
+                  <Calender type={"date"}></Calender>
+                
+                 <ButtonContainer>
+                  <button onClick={()=>{modalStateDispatch({type:props.type})}}>취소</button>
+                  <button onClick={()=>{modalStateDispatch({type:props.type})}}>확인</button>
+                 </ButtonContainer>
+                </div>
+              }
+            />
+          </DateContext.Provider>
+        )}
+        {modalState.personCount && (
+          <CountPeopleContext.Provider
+            value={{ countPeople, countPeopleDispatch }}
+          >
+            <Modal
+              content={
+                <div>
+                  <Counter type={"adult"} value={adult} />
+                  <Counter type={"child"} value={child} />
+                  <Counter type={"baby"} value={baby} />
+                  <div>
+                    <Button onClick={filterHandler}>저장</Button>
+                  </div>
+                </div>
+              }
+            />
+          </CountPeopleContext.Provider>
+        )}
+
+        {modalState.type && (
+          <Modal
+            content={
+              <RoomTypeContext.Provider value={{ roomType, roomTypeDispatch }}>
+                <AccommodationType
+                  value={"whole_house"}
+                  title={type.whole_house.title}
+                  content={type.whole_house.content}
+                />
+                <AccommodationType
+                  value={"private_room"}
+                  title={type.private_room.title}
+                  content={type.private_room.content}
+                />
+                <AccommodationType
+                  value={"hotel_room"}
+                  title={type.hotel_room.title}
+                  content={type.hotel_room.content}
+                />
+                <AccommodationType
+                  value={"multi_person_room"}
+                  title={type.multi_person_room.title}
+                  content={type.multi_person_room.content}
+                />
+              </RoomTypeContext.Provider>
+            }
+          />
+        )}
+        {modalState.filter && (
           <Modal
             content={
               <div>
-                <Counter type={"adult"} value={adult} />
-                <Counter type={"child"} value={child} />
-                <Counter type={"baby"} value={baby} />
-                <div>
-                  <Button onClick={filterHandler}>저장</Button>
-                </div>
+                <Slide></Slide>
               </div>
             }
           />
-        </CountPeopleContext.Provider>
-      )}
-
-      {modalState.type && (
-        <Modal
-          content={
-            <RoomTypeContext.Provider value={{roomType,roomTypeDispatch}}>
-              <AccommodationType
-                value={"whole_house"}
-                title={type.whole_house.title}
-                content={type.whole_house.content}
-              />
-              <AccommodationType
-                value={"private_room"}
-                title={type.private_room.title}
-                content={type.private_room.content}
-              />
-              <AccommodationType
-                value={"hotel_room"}
-                title={type.hotel_room.title}
-                content={type.hotel_room.content}
-              />
-              <AccommodationType
-                value={"multi_person_room"}
-                title={type.multi_person_room.title}
-                content={type.multi_person_room.content}
-              />
-            </RoomTypeContext.Provider>
-          }
-        />
-      )}
-      {modalState.filter && (
-        <Modal
-          content={
-            <div>
-              <Slide></Slide>
-            </div>
-          }
-        />
-      )}
+        )}
+      </ModalContext.Provider>
     </div>
   );
 };

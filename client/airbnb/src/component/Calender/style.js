@@ -6,7 +6,3 @@ export const DateWrap = styled.div`
 `;
 
 
-export const ButtonContainer = styled.div`
-    display : flex;
-    justify-content : space-between;
-`;

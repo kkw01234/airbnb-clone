@@ -13,8 +13,12 @@ const Modal = styled.button`
     border-radius : 0.2rem;
     border : 0.1rem solid black;
 `;
-
+const ButtonContainer = styled.div`
+    display : flex;
+    justify-content : space-between;
+`;
 export {
     Button,
-    Modal
+    Modal,
+    ButtonContainer
 }

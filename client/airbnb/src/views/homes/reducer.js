@@ -21,3 +21,19 @@ export const roomTypeReducer = (state, action) => {
 export const priceTypeReducer = (state, action) =>{
     console.log(state, action);
 }
+
+export const ModalReducer = (state, action) =>{
+  console.log(action);
+  Object.keys(state).forEach(value=>{
+   
+    if(value === action.type) state[value] = !state[value];
+    else state[value] = false;
+  });
+  console.log(action.type, state);
+  return {...state};
+}
+
+
+export const DateReducer = (state, action) =>{
+    return {startDate: action.startDate, endDate: action.endDate};
+}
