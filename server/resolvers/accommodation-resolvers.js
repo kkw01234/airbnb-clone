@@ -59,7 +59,7 @@ const resolvers = {
       info
     ) => {
       // console.log(value);
-      // console.log();
+      console.log(check_in,check_out);
       if (!check_in) check_in = new Date();
       if (!check_out) check_out = new Date().setDate(new Date().getDate() + 1);
       const where = {

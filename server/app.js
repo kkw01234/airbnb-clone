@@ -6,6 +6,7 @@ var logger = require('morgan');
 const passport =require('passport');
 const passportConfig = require('./passport/passport');
 
+const cors =require('cors');
 /*sequelize Model*/
 const models = require('./models/index');
 // graphql
@@ -35,6 +36,7 @@ const server = new GraphQLServer({
 });
 passportConfig();
 server.express.use(passport.initialize());
+server.express.use(cors())
 server.express.use(function(req,res,next){
   passport.authenticate('jwt',{session:false},(err,user,infor)=>{
     if(user) req.user = user;

@@ -1,6 +1,6 @@
-import React, { useState, createContext, useReducer } from "react";
+import React, { useState, createContext, useReducer, useEffect } from "react";
 import Counter from "../../component/Counter/index";
-import { Button,ButtonContainer } from "./style";
+import { Button, ButtonContainer } from "./style";
 /* reducer */
 import {
   countPeopleReducer,
@@ -15,6 +15,7 @@ import AccommodationType from "../../component/AccommodationType";
 import Slide from "../../component/Slide";
 import { Calender } from "../../component/Calender";
 import moment from "moment";
+import { Accommodation } from "../../component/Accommodation/index";
 
 /* context API */
 export const CountPeopleContext = createContext();
@@ -22,6 +23,7 @@ export const RoomTypeContext = createContext();
 export const priceContext = createContext();
 export const ModalContext = createContext();
 export const DateContext = createContext();
+
 const adult = {
   name: "성인",
   comment: ""
@@ -62,7 +64,10 @@ const typeCheck = {
   multi_person_room: false
 };
 
+let isFetching =false;
+
 const Homes = props => {
+  
   const [countPeople, countPeopleDispatch] = useReducer(countPeopleReducer, {
     adult: 0,
     child: 0,
@@ -86,34 +91,59 @@ const Homes = props => {
     price: false
   });
 
-  const counterHandler = state => {
-    modalStateDispatch({ type: state });
-  };
   const filterHandler = async () => {
+    const count = Object.keys(countPeople).reduce((prev, curr) => {
+      prev += countPeople[curr];
+      return prev;
+    }, 0);
     const query = `query{
           findAccFilter(
-            start_date: ${date.startDate},
-            end_date: ${date.endDate} 
-            person: ${countPeople}}){
+            check_in: "${date.startDate._d}",
+            check_out: "${date.endDate._d}", 
+            person: ${count},
+            whole_house : ${roomType.whole_house},
+            private_room : ${roomType.private_room},
+            hotel_room : ${roomType.hotel_room},
+            multi_person_room : ${roomType.multi_person_room}){
               name,
               address,
               image,
               content,
               price,
               rating
-              host_id
+              host_id,
+              min_person,
+              max_person,
+              room_count,
+              bathroom_count
           }
       }`;
-
+    // console.log(query);
     const data = await sendRequest(query);
-    console.log(data);
+    setAccommodations(data.findAccFilter);
+    // return data;
   };
+  const [accommodations, setAccommodations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(()=>{
+    if(!loading) return;
+    setLoading(false);
+    filterHandler();
+  })
+
+
+  const counterHandler = state => {
+    modalStateDispatch({ type: state });
+  };
+  if(loading) return (<div></div>);
+  else
   return (
     <div>
       <div>
         <div></div>
       </div>
+      {/* {getAccommodation()} */}
       <ModalContext.Provider value={{ modalState, modalStateDispatch }}>
         <div>
           <Button onClick={counterHandler.bind(this, "date")}>날짜</Button>
@@ -132,11 +162,23 @@ const Homes = props => {
               content={
                 <div>
                   <Calender type={"date"}></Calender>
-                
-                 <ButtonContainer>
-                  <button onClick={()=>{modalStateDispatch({type:props.type})}}>취소</button>
-                  <button onClick={()=>{modalStateDispatch({type:props.type})}}>확인</button>
-                 </ButtonContainer>
+
+                  <ButtonContainer>
+                    <button
+                      onClick={() => {
+                        modalStateDispatch({ type: props.type });
+                      }}
+                    >
+                      취소
+                    </button>
+                    <button
+                      onClick={() => {
+                        modalStateDispatch({ type: props.type });
+                      }}
+                    >
+                      확인
+                    </button>
+                  </ButtonContainer>
                 </div>
               }
             />
@@ -199,6 +241,20 @@ const Homes = props => {
           />
         )}
       </ModalContext.Provider>
+      <div>
+        {console.log(accommodations)}
+        {
+          accommodations.length >=1  &&
+          (
+            accommodations.map((accommodation,idx)=>{
+            
+              return <Accommodation key={idx} accommodation={accommodation}/>
+            })
+          )
+
+        }
+       
+      </div>
     </div>
   );
 };
