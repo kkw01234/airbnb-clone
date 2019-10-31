@@ -124,6 +124,8 @@ const Homes = props => {
   const [accommodations, setAccommodations] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // const
+
   useEffect(()=>{
     if(!loading) return;
     setLoading(false);
@@ -320,6 +322,7 @@ const Homes = props => {
       </div>
     </div>
   );
+
 };
 
 export default Homes;

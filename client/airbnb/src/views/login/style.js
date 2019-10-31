@@ -2,22 +2,25 @@ import React from 'react';
 import styled, {css} from 'styled-components';
 
 
-const Component = styled.div`
+export const Component = styled.div`
     display:flex;
     flex-direction:column;
     justify-content:center;
     text-align:center;
     
 `
+export const LoginTitleDiv = styled.div`
+    font-size : 1.5rem;
+`;
 
-const ButtonComponent = styled.div`
+export const ButtonComponent = styled.div`
     display :flex;
     justify-content :center;
 `
 
 
 
-const Button = styled.button`
+export const Button = styled.button`
     background-color : #ff777b;
     color : white;
     border-radius : 0.2rem;
@@ -25,9 +28,3 @@ const Button = styled.button`
     margin : 0.3rem;
 `
 
-
-export {
-    Button,
-    ButtonComponent,
-    Component
-}
